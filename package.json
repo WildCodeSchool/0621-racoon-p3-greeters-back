@@ -23,5 +23,8 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.25.1",
     "prettier-eslint": "^13.0.0"
+  },
+  "dependencies": {
+    "nodemon": "^2.0.12"
   }
 }
