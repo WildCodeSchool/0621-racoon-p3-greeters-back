@@ -17,8 +17,6 @@ connection.connect(err => {
     console.log('connected as id ' + connection.threadId)
   }
 })
-
-//pre-route middlewares
 app.use(cors())
 app.use(morgan('tiny'))
 app.use(express.json())
