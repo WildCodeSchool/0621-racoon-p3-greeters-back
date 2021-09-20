@@ -24,15 +24,8 @@ app.use(morgan('tiny'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/person', routes.person)
-
-//routes GET
-app.get('/', (req, res) => {
-  res.status(200).send('je suis dans le /')
-})
-
-app.get('/person', (req, res) => {
-  res.status(200).send('je suis dans le /person')
-})
+app.use('/city', routes.city)
+app.use('/livreOr', routes.livreOr)
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
