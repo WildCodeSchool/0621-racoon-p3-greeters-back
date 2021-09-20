@@ -45,20 +45,7 @@ router.get('/:id', (req, res) => {
     }
   )
 })
-//Post d'un greeter avec toutes les données//
-=======
-  //All greeters
-  mysql.query('SELECT * FROM person', (err, result) => {
-    if (err) {
-      res.status(500).send('error from database')
-    } else {
-      res.status(200).json(result)
-    }
-  })
-  res.status(200).send('je suis dans /persons')
-})
 
->>>>>>> c2ac6827cb14b2968cd1251458e9764c64d6170d
 router.post('/', (req, res) => {
   const bodyData = [
     req.body.person_firstname,
