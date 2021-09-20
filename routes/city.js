@@ -30,26 +30,12 @@ router.post('/', (req, res) => {
     req.body.city_latitude
   ]
   const sql = `INSERT INTO city (city_title_fr, city_title_en, city_name, city_photo, city_description_fr, city_description_en, city_legende_photo_fr, city_legende_photo_en, city_lien, city_longitude, city_latitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+
   mysql.query(sql, cityData, (err, result) => {
     if (err) {
-      res.status(500).send('Erros from database')
+      res.status(500).send('Error from database')
     } else {
-      const id = result.insertId
-      const createdCity = {
-        id,
-        city_title_fr,
-        city_title_en,
-        city_name,
-        city_photo,
-        city_description_fr,
-        city_description_en,
-        city_legende_photo_fr,
-        city_legende_photo_en,
-        city_lien,
-        city_longitude,
-        city_latitude
-      }
-      res.status(200).json(createdCity)
+      res.status(200).send('post added')
     }
   })
 })
