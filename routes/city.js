@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
   })
 })
 
-//Create get for City/:id//
+//Get for City/:id//
 router.get('/:id', (req, res) => {
   const cityId = req.params.id
   mysql.query(
@@ -29,6 +29,7 @@ router.get('/:id', (req, res) => {
     }
   )
 })
+
 //post for City//
 router.post('/', (req, res) => {
   const cityData = [
@@ -56,6 +57,22 @@ router.post('/', (req, res) => {
 })
 
 // create PUT for city/:id//
-// create DELETE for city/:id//
 
+//DELETE for city/:id//
+router.delete('/:id', (req, res) => {
+  const cityId = req.params.id
+
+  mysql.query(
+    'DELETE FROM city WHERE city.city_id=?',
+    [cityId],
+    (err, results) => {
+      if (err) {
+        console.log(err)
+        res.status(500).send('Error deleting a city')
+      } else {
+        res.status(200).send('City deleted!')
+      }
+    }
+  )
+})
 module.exports = router
