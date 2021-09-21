@@ -4,7 +4,6 @@ const mysql = require('../db-config')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-
   //all greteers//
   mysql.query(
     'SELECT * FROM person JOIN thematic_fr JOIN thematic_en JOIN language_fr JOIN language_en',
@@ -67,9 +66,9 @@ router.post('/', (req, res) => {
       res.status(500).send('error from database')
     } else {
       console.log(result)
-      const sql2 = `INSERT INTO (person_has_thematic_fr, person_has_thematic_en, person_has_language_fr, person_has_language_en
-        (person_person_id, thematic_fr_thematics_fr_id, language_fr_language_fr_id)
-        VALUES (?, ?, ?, ?)`
+      const sql2 = `INSERT INTO (person_has_thematic_fr, person_has_thematic_en, person_has_language_fr, person_has_language_en,
+        person_person_id, thematic_fr_thematics_fr_id, language_fr_language_fr_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?)`
 
       const idperson = result.insertId
 
@@ -119,6 +118,23 @@ router.put('./api/person/:id', (req, res) => {
         } else {
           res.status(404).send(`Movies from id ${personId} not found`)
         }
+      }
+    }
+  )
+})
+
+//DELETE for person/:id//
+router.delete('/:id', (req, res) => {
+  const personId = req.params.id
+  mysql.query(
+    'DELETE FROM person WHERE person.person_id=?',
+    [personId],
+    (err, results) => {
+      if (err) {
+        console.log(err)
+        res.status(500).send('Error deleting a greeter')
+      } else {
+        res.status(200).send('Greeter deleted!')
       }
     }
   )
