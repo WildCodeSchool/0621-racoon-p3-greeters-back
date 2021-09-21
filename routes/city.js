@@ -56,7 +56,7 @@ router.post('/', (req, res) => {
   })
 })
 
-// PUT for city/:id//
+// create PUT for city/:id//
 router.put('/:id', (req, res) => {
   const cityId = req.params.id
   mysql.query(
@@ -78,8 +78,8 @@ router.put('/:id', (req, res) => {
                 console.log(err)
                 res.status(500).send('Error updating a city')
               } else {
-                const updated = { ...cityFromDb, ...cityToUpdate }
-                res.status(200).json(updated)
+                //const updated = { ...cityFromDb, ...cityToUpdate }
+                res.status(200).json(cityToUpdate)
               }
             }
           )
