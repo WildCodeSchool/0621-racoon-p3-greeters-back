@@ -56,12 +56,43 @@ router.post('/', (req, res) => {
   })
 })
 
-// create PUT for city/:id//
-
+// PUT for city/:id//
+router.put('/:id', (req, res) => {
+  const cityId = req.params.id
+  mysql.query(
+    'SELECT * FROM city WHERE city.city_id=?',
+    [cityId],
+    (err, selectResult) => {
+      if (err) {
+        console.log(err)
+        res.status(500).send('Error updating a city')
+      } else {
+        const cityFromDb = selectResult[0]
+        if (cityFromDb) {
+          const cityToUpdate = req.body
+          mysql.query(
+            'UPDATE city SET ? WHERE city.city_id=?',
+            [cityToUpdate, cityId],
+            err => {
+              if (err) {
+                console.log(err)
+                res.status(500).send('Error updating a city')
+              } else {
+                const updated = { ...cityFromDb, ...cityToUpdate }
+                res.status(200).json(updated)
+              }
+            }
+          )
+        } else {
+          res.status(404).send(`City with id ${cityId} not found.`)
+        }
+      }
+    }
+  )
+})
 //DELETE for city/:id//
 router.delete('/:id', (req, res) => {
   const cityId = req.params.id
-
   mysql.query(
     'DELETE FROM city WHERE city.city_id=?',
     [cityId],
