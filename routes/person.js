@@ -6,7 +6,7 @@ const router = express.Router()
 router.get('/', (req, res) => {
   //all greteers//
   mysql.query(
-    'SELECT * FROM person JOIN thematic_fr JOIN thematic_en JOIN language_fr JOIN language_en',
+    'SELECT * FROM person JOIN thematic_fr JOIN thematic_en JOIN language_fr JOIN language_en JOIN city ON city.city_id=person_city_id',
     (err, result) => {
       if (err) {
         res.status(500).send('Error from Database')
@@ -18,10 +18,11 @@ router.get('/', (req, res) => {
 })
 
 router.get('/:id', (req, res) => {
-  //All greeters
+  const personId = req.params.id
   mysql.query(
     // 'SELECT * FROM person JOIN person.thematic_fr, JOIN thematic_en JOIN language_fr JOIN language_en',
-    'SELECT p.* FROM person as p WHERE p.person_id=1',
+    'SELECT p.* FROM person as p WHERE p.person_id= ?',
+    [personId],
     (err, result) => {
       if (err) {
         res.status(500).send('error from database')
@@ -66,11 +67,10 @@ router.post('/', (req, res) => {
       res.status(500).send('error from database')
     } else {
       console.log(result)
+      const idperson = result.insertId
       const sql2 = `INSERT INTO (person_has_thematic_fr, person_has_thematic_en, person_has_language_fr, person_has_language_en
         (person_person_id, thematic_fr_thematics_fr_id, language_fr_language_fr_id)
-        VALUES (?, ?, ?, ?)`
-
-      const idperson = result.insertId
+        VALUES ?`
 
       const data = [
         idperson,
@@ -93,7 +93,7 @@ router.post('/', (req, res) => {
 router.put('./:id', (req, res) => {
   const personId = req.params.id
   mysql.query(
-    'SELECT * FROM person WHERE id = ?',
+    'SELECT * FROM person WHERE person_id = ?',
     [personId],
     (err, result) => {
       if (err) {
@@ -104,14 +104,16 @@ router.put('./:id', (req, res) => {
         if (personFromDb) {
           const personPropsToUpdate = req.body
           mysql.query(
-            'UPDATE person SET ? WHERE id = ?'[(personPropsToUpdate, personId)],
+            'UPDATE person SET ? WHERE person_id = ?'[
+              (personPropsToUpdate, personId)
+            ],
             err => {
               if (err) {
                 console.log(err)
                 res.status(500).send('Error updating')
               } else {
-                const updated = { ...personFromDb, ...personPropsToUpdate }
-                res.status(200).json(updated)
+                //const updated = { ...personFromDb, ...personPropsToUpdate }//
+                res.status(200).json(personPropsToUpdate)
               }
             }
           )

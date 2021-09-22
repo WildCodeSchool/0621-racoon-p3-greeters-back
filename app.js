@@ -24,7 +24,6 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use('/person', routes.person)
 app.use('/city', routes.city)
-app.use('/livreOr', routes.livreOr)
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
