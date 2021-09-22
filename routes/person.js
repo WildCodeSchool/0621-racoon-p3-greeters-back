@@ -6,7 +6,7 @@ const router = express.Router()
 router.get('/', (req, res) => {
   //all greteers//
   mysql.query(
-    'SELECT * FROM person JOIN thematic_fr JOIN thematic_en JOIN language_fr JOIN language_en',
+    'SELECT * FROM person JOIN thematic_fr JOIN thematic_en JOIN language_fr JOIN language_en JOIN city ON city.city_id=person_city_id',
     (err, result) => {
       if (err) {
         res.status(500).send('Error from Database')
