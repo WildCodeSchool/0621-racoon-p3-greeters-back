@@ -6,7 +6,7 @@ const router = express.Router()
 router.get('/', (req, res) => {
   //all greteers//
   mysql.query(
-    'SELECT * FROM person JOIN thematic_fr JOIN thematic_en JOIN language_fr JOIN language_en JOIN city ON city.city_id=person_city_id',
+    'SELECT * FROM person JOIN thematic JOIN language JOIN city ON city.city_id=person_city_id',
     (err, result) => {
       if (err) {
         res.status(500).send('Error from Database')
@@ -17,27 +17,43 @@ router.get('/', (req, res) => {
   )
 })
 
+//All greeters
 router.get('/:id', (req, res) => {
-  const personId = req.params.id
+  const cityId = req.params.id
   mysql.query(
-    // 'SELECT * FROM person JOIN person.thematic_fr, JOIN thematic_en JOIN language_fr JOIN language_en',
-    'SELECT p.* FROM person as p WHERE p.person_id= ?',
-    [personId],
+    //get greeter by id
+    'SELECT p.* FROM person as p WHERE p.person_id=?',
+    [cityId],
     (err, result) => {
       if (err) {
-        res.status(500).send('error from database')
+        res.status(500).send(' 1st error from database')
       } else {
         console.log(result)
         mysql.query(
-          'SELECT pht.thematic_fr_thematics_fr_id, t.thematic_fr_title, t.thematic_fr_name FROM person_has_thematic_fr AS pht JOIN person AS p ON pht.person_person_id=p.person_id JOIN thematic_fr AS t ON pht.thematic_fr_thematics_fr_id = t.thematics_fr_id',
+          //get thematic_fr with greeter id
+          'SELECT pht.person_person_id,t.* FROM person_has_thematic AS pht LEFT JOIN thematic AS t ON pht.thematic_thematic_id = t.thematic_id WHERE person_person_id= ?',
+          [cityId],
           (err, result2) => {
             if (err) {
-              res.status(500).send('error from database')
+              res.status(500).send('2nd error from database')
             } else {
-              //AJOUTER UN SELECT POUR LANGAGE ICI//
               console.log(result2)
-              //SELECT phl.language_fr_language_fr_id, l.language_fr_title, l.language_fr_name FROM person_has_language_fr AS phl JOIN person AS p ON phl.person_person_id=p.person_id JOIN language_fr AS l ON phl.language_fr_language_fr_id=l.language_fr_id;//
-              res.status(200).json({ result, result2 })
+              mysql.query(
+                //get language_fr with greeter id
+                'SELECT phl.person_person_id,l.* FROM person_has_language AS phl LEFT JOIN language AS l ON phl.language_language_id = l.language_id WHERE person_person_id= ?',
+                [cityId],
+                (err, result3) => {
+                  if (err) {
+                    res.status(500).send('3rd error from database')
+                  } else {
+                    res.status(200).json({
+                      result,
+                      result2,
+                      result3
+                    })
+                  }
+                }
+              )
             }
           }
         )
@@ -68,16 +84,16 @@ router.post('/', (req, res) => {
     } else {
       console.log(result)
       const idperson = result.insertId
-      const sql2 = `INSERT INTO (person_has_thematic_fr, person_has_thematic_en, person_has_language_fr, person_has_language_en
-        (person_person_id, thematic_fr_thematics_fr_id, language_fr_language_fr_id)
+      const sql2 = `INSERT INTO person_has_thematic_fr
+        (person_person_id, thematic_fr_thematics_fr_id)
         VALUES ?`
 
       const data = [
         idperson,
-        req.body.thematic_fr,
-        req.body.thematic_en,
-        req.body.language_fr,
-        req.body.language_en
+        req.body.thematic_fr_thematics_fr_id
+        // req.body.thematic_en,
+        // req.body.language_fr,
+        // req.body.language_en
       ]
       mysql.query(sql2, data, (err, result2) => {
         if (err) {
@@ -90,7 +106,7 @@ router.post('/', (req, res) => {
   })
 })
 //update un greeter via son ID//
-router.put('./:id', (req, res) => {
+router.put('/:id', (req, res) => {
   const personId = req.params.id
   mysql.query(
     'SELECT * FROM person WHERE person_id = ?',
