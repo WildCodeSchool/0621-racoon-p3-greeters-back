@@ -6,7 +6,7 @@ const router = express.Router()
 router.get('/', (req, res) => {
   //all greteers//
   mysql.query(
-    'SELECT * FROM person JOIN thematic_fr JOIN thematic_en JOIN language_fr JOIN language_en JOIN city ON city.city_id=person_city_id',
+    'SELECT * FROM person JOIN thematic JOIN language JOIN city ON city.city_id=person_city_id',
     (err, result) => {
       if (err) {
         res.status(500).send('Error from Database')
@@ -30,8 +30,8 @@ router.get('/:id', (req, res) => {
       } else {
         console.log(result)
         mysql.query(
-          //get thematic_fr with greeter id
-          'SELECT pht.person_person_id,t.* FROM person_has_thematic_fr AS pht LEFT JOIN thematic_fr AS t ON pht.thematic_fr_thematics_fr_id = t.thematics_fr_id WHERE person_person_id= ?',
+          //get thematic with greeter id
+          'SELECT pht.person_person_id,t.* FROM person_has_thematic AS pht LEFT JOIN thematic AS t ON pht.thematic_thematic_id = t.thematic_id WHERE pht.person_person_id= ?',
           [cityId],
           (err, result2) => {
             if (err) {
@@ -39,42 +39,18 @@ router.get('/:id', (req, res) => {
             } else {
               console.log(result2)
               mysql.query(
-                //get language_fr with greeter id
-                'SELECT phl.person_person_id,l.* FROM person_has_language_fr AS phl LEFT JOIN language_fr AS l ON phl.language_fr_language_fr_id = l.language_fr_id WHERE person_person_id= ?',
+                //get language with greeter id
+                'SELECT phl.person_person_id,l.* FROM person_has_language AS phl LEFT JOIN language AS l ON phl.language_language_id = l.language_id WHERE phl.person_person_id= ?',
                 [cityId],
                 (err, result3) => {
                   if (err) {
                     res.status(500).send('3rd error from database')
                   } else {
-                    mysql.query(
-                      //get thematic_en with greeter id
-                      'SELECT phten.person_person_id,ten.* FROM person_has_thematic_en AS phten LEFT JOIN thematic_en AS ten ON phten.thematic_en_thematic_en_id = ten.thematic_en_id WHERE person_person_id= ?',
-                      [cityId],
-                      (err, result4) => {
-                        if (err) {
-                          res.status(500).send('4th error from database')
-                        } else {
-                          mysql.query(
-                            //get language_en with greeter id
-                            'SELECT phlen.person_person_id,len.* FROM person_has_language_en AS phlen LEFT JOIN language_en AS len ON phlen.language_en_language_en_id = len.language_en_id WHERE person_person_id= ?',
-                            [cityId],
-                            (err, result5) => {
-                              if (err) {
-                                res.status(500).send('5th error from database')
-                              } else {
-                                res.status(200).json({
-                                  result,
-                                  result2,
-                                  result3,
-                                  result4,
-                                  result5
-                                })
-                              }
-                            }
-                          )
-                        }
-                      }
-                    )
+                    res.status(200).json({
+                      result,
+                      result2,
+                      result3
+                    })
                   }
                 }
               )
