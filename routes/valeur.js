@@ -16,6 +16,7 @@ router.get('/:lang', (req, res) => {
   })
 })
 
+//put for valeur fr and en//
 router.put('/:lang', (req, res) => {
   const lang = req.params.lang
   const sql = `SELECT value_id, value_title1_${lang}, value_title2_${lang}, value_photo, value_content_${lang} FROM value`

@@ -17,26 +17,67 @@ router.get('/', (req, res) => {
   )
 })
 
+//All greeters
 router.get('/:id', (req, res) => {
-  //All greeters
+  const cityId = req.params.id
   mysql.query(
-    // 'SELECT * FROM person JOIN person.thematic_fr, JOIN thematic_en JOIN language_fr JOIN language_en',
-    'SELECT p.* FROM person as p WHERE p.person_id=1',
+    //get greeter by id
+    'SELECT p.* FROM person as p WHERE p.person_id=?',
+    [cityId],
     (err, result) => {
       if (err) {
-        res.status(500).send('error from database')
+        res.status(500).send(' 1st error from database')
       } else {
         console.log(result)
         mysql.query(
-          'SELECT pht.thematic_fr_thematics_fr_id, t.thematic_fr_title, t.thematic_fr_name FROM person_has_thematic_fr AS pht JOIN person AS p ON pht.person_person_id=p.person_id JOIN thematic_fr AS t ON pht.thematic_fr_thematics_fr_id = t.thematics_fr_id',
+          //get thematic_fr with greeter id
+          'SELECT pht.person_person_id,t.* FROM person_has_thematic_fr AS pht LEFT JOIN thematic_fr AS t ON pht.thematic_fr_thematics_fr_id = t.thematics_fr_id WHERE person_person_id= ?',
+          [cityId],
           (err, result2) => {
             if (err) {
-              res.status(500).send('error from database')
+              res.status(500).send('2nd error from database')
             } else {
-              //AJOUTER UN SELECT POUR LANGAGE ICI//
               console.log(result2)
-              //SELECT phl.language_fr_language_fr_id, l.language_fr_title, l.language_fr_name FROM person_has_language_fr AS phl JOIN person AS p ON phl.person_person_id=p.person_id JOIN language_fr AS l ON phl.language_fr_language_fr_id=l.language_fr_id;//
-              res.status(200).json({ result, result2 })
+              mysql.query(
+                //get language_fr with greeter id
+                'SELECT phl.person_person_id,l.* FROM person_has_language_fr AS phl LEFT JOIN language_fr AS l ON phl.language_fr_language_fr_id = l.language_fr_id WHERE person_person_id= ?',
+                [cityId],
+                (err, result3) => {
+                  if (err) {
+                    res.status(500).send('3rd error from database')
+                  } else {
+                    mysql.query(
+                      //get thematic_en with greeter id
+                      'SELECT phten.person_person_id,ten.* FROM person_has_thematic_en AS phten LEFT JOIN thematic_en AS ten ON phten.thematic_en_thematic_en_id = ten.thematic_en_id WHERE person_person_id= ?',
+                      [cityId],
+                      (err, result4) => {
+                        if (err) {
+                          res.status(500).send('4th error from database')
+                        } else {
+                          mysql.query(
+                            //get language_en with greeter id
+                            'SELECT phlen.person_person_id,len.* FROM person_has_language_en AS phlen LEFT JOIN language_en AS len ON phlen.language_en_language_en_id = len.language_en_id WHERE person_person_id= ?',
+                            [cityId],
+                            (err, result5) => {
+                              if (err) {
+                                res.status(500).send('5th error from database')
+                              } else {
+                                res.status(200).json({
+                                  result,
+                                  result2,
+                                  result3,
+                                  result4,
+                                  result5
+                                })
+                              }
+                            }
+                          )
+                        }
+                      }
+                    )
+                  }
+                }
+              )
             }
           }
         )
