@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
   )
 })
 
-//All greeters
+//get All greeters
 router.get('/:id', (req, res) => {
   const cityId = req.params.id
   mysql.query(
@@ -104,25 +104,27 @@ router.post('/', (req, res) => {
 
   mysql.query(sql, bodyData, (err, result) => {
     if (err) {
-      res.status(500).send('error from database')
+      res.status(500).send('1st error from database')
     } else {
       console.log(result)
-      const sql2 = `INSERT INTO (person_has_thematic_fr, person_has_thematic_en, person_has_language_fr, person_has_language_en,
-        person_person_id, thematic_fr_thematics_fr_id, language_fr_language_fr_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`
+      const sql2 = `INSERT INTO person_has_thematic_fr
+        (person_person_id, thematic_fr_thematics_fr_id)
+        VALUES (?, ?)`
 
       const idperson = result.insertId
+      console.log(idperson)
 
       const data = [
         idperson,
-        req.body.thematic_fr,
-        req.body.thematic_en,
-        req.body.language_fr,
-        req.body.language_en
+        req.body.thematic_fr_thematics_fr_id
+        // req.body.language_fr_language_fr_id,
+        // req.body.language_en_language_en_id,
+        // req.body.thematic_en_thematics_en_id
       ]
+      console.log(data)
       mysql.query(sql2, data, (err, result2) => {
         if (err) {
-          res.status(500).send(err)
+          res.status(500).send('2nd')
         } else {
           res.status(200).json({ result, result2 })
         }
