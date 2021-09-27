@@ -1,8 +1,9 @@
 const express = require('express')
-const { Result } = require('express-validator')
-const Joi = require('joi')
-const { contact } = require('.')
 const mysql = require('../db-config')
+
+// const { Result } = require('express-validator')
+const Joi = require('joi')
+// const { contact } = require('.')
 
 const router = express.Router()
 
@@ -15,11 +16,12 @@ router.get('/', (req, res) => {
     }
   })
 })
+
 router.post('/', (req, res) => {
   const { firstname, lastname, mail, object, message } = req.body
 
   const { error } = Joi.object({
-    mail: Joi.string().mail().max(255).required(),
+    mail: Joi.string().email().max(255).required(),
     firstname: Joi.string().max(255).required(),
     lastname: Joi.string().max(255).required()
   }).validate({ mail, firstname, lastname }, { abortEarly: false })
