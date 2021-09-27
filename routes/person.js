@@ -112,128 +112,129 @@ router.get('/:id', (req, res) => {
                     console.log(result3)
                     res.status(200).json({ result, result2, result3 })
                   }
-              }
-            )
+                }
+              )
+            }
           }
-        }
-      )
-    }
-  }
-)
-
-router.post('/', (req, res) => {
-  const bodyData = [
-    req.body.person_firstname,
-    req.body.person_lastname,
-    req.body.person_photo,
-    req.body.person_catch_phrase_fr,
-    req.body.person_description_fr,
-    req.body.person_catch_phrase_en,
-    req.body.person_description_en,
-    req.body.person_city_id
-  ]
-  //Post into person
-  const sql = `INSERT INTO person
-    (person_firstname, person_lastname, person_photo, person_catch_phrase_fr, person_description_fr, person_catch_phrase_en, person_description_en, person_city_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-
-  mysql.query(sql, bodyData, (err, result) => {
-    if (err) {
-      res.status(500).send('1st error from database')
-    } else {
-      //Post into person_has_thematic
-      const sql2 = `INSERT INTO person_has_thematic
-        (person_person_id, thematic_thematic_id)
-        VALUES (?, ?)`
-      const idperson = result.insertId
-      const themData = [idperson, req.body.thematic_thematic_id]
-      mysql.query(sql2, themData, (err, result2) => {
-        if (err) {
-          res.status(500).send('2nd')
-        } else {
-          //Post into person_has_language
-          const sql3 = `INSERT INTO person_has_language
-            (person_person_id, language_language_id)
-            VALUES (?, ?)`
-          const idperson = result.insertId
-          const langData = [idperson, req.body.language_language_id]
-          mysql.query(sql3, langData, (err, result3) => {
-            if (err) {
-              res.status(500).send('3rd error from database')
-            } else {
-              res.status(200).json({ result, result2, result3 })
-            }
-          })
-        }
-      })
-    }
-  })
-})
-
-//Update a greeter by ID//
-router.put('/:id', (req, res) => {
-  const personId = req.params.id
-  mysql.query(
-    'SELECT * FROM person WHERE person.person_id = ?',
-    [personId],
-    (err, result) => {
-      if (err) {
-        console.log(err)
-        res.status(500).send('Error updating')
-      } else {
-        const personFromDb = result[0]
-        if (personFromDb) {
-          const personPropsToUpdate = req.body
-          mysql.query(
-            'UPDATE person SET ? WHERE person.person_id = ?',
-            [personPropsToUpdate, personId],
-            err => {
-              if (err) {
-                console.log(err)
-                res.status(500).send('Error updating')
-              } else {
-                res.status(200).json(personPropsToUpdate)
-              }
-            }
-          )
-        } else {
-          res.status(404).send(`not found`)
-        }
+        )
       }
     }
   )
-})
 
-//DELETE for person/:id//
-router.delete('/:id', (req, res) => {
-  const personId = req.params.id
-  //DELETE into person_has_thematic
-  const sql = `DELETE FROM person_has_thematic WHERE
-        person_person_id=?`
-  mysql.query(sql, [personId], (err, result) => {
-    if (err) {
-      res.status(500).send('1st error')
-    } else {
-      //DELETE into person_has_language
-      const sql2 = `DELETE FROM person_has_language WHERE
-        person_person_id=?`
-      mysql.query(sql2, [personId], (err, result2) => {
+  router.post('/', (req, res) => {
+    const bodyData = [
+      req.body.person_firstname,
+      req.body.person_lastname,
+      req.body.person_photo,
+      req.body.person_catch_phrase_fr,
+      req.body.person_description_fr,
+      req.body.person_catch_phrase_en,
+      req.body.person_description_en,
+      req.body.person_city_id
+    ]
+    //Post into person
+    const sql = `INSERT INTO person
+    (person_firstname, person_lastname, person_photo, person_catch_phrase_fr, person_description_fr, person_catch_phrase_en, person_description_en, person_city_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+
+    mysql.query(sql, bodyData, (err, result) => {
+      if (err) {
+        res.status(500).send('1st error from database')
+      } else {
+        //Post into person_has_thematic
+        const sql2 = `INSERT INTO person_has_thematic
+        (person_person_id, thematic_thematic_id)
+        VALUES (?, ?)`
+        const idperson = result.insertId
+        const themData = [idperson, req.body.thematic_thematic_id]
+        mysql.query(sql2, themData, (err, result2) => {
+          if (err) {
+            res.status(500).send('2nd')
+          } else {
+            //Post into person_has_language
+            const sql3 = `INSERT INTO person_has_language
+            (person_person_id, language_language_id)
+            VALUES (?, ?)`
+            const idperson = result.insertId
+            const langData = [idperson, req.body.language_language_id]
+            mysql.query(sql3, langData, (err, result3) => {
+              if (err) {
+                res.status(500).send('3rd error from database')
+              } else {
+                res.status(200).json({ result, result2, result3 })
+              }
+            })
+          }
+        })
+      }
+    })
+  })
+
+  //Update a greeter by ID//
+  router.put('/:id', (req, res) => {
+    const personId = req.params.id
+    mysql.query(
+      'SELECT * FROM person WHERE person.person_id = ?',
+      [personId],
+      (err, result) => {
         if (err) {
-          res.status(500).send('2st error')
+          console.log(err)
+          res.status(500).send('Error updating')
         } else {
-          //DELETE into person
-          const sql3 = 'DELETE FROM person WHERE person.person_id=?'
-          mysql.query(sql3, [personId], (err, result3) => {
-            if (err) {
-              console.log(err)
-              res.status(500).send('Error deleting a greeter')
-            } else {
-              res.status(200).send('Greeter deleted!')
-            }
-          })
+          const personFromDb = result[0]
+          if (personFromDb) {
+            const personPropsToUpdate = req.body
+            mysql.query(
+              'UPDATE person SET ? WHERE person.person_id = ?',
+              [personPropsToUpdate, personId],
+              err => {
+                if (err) {
+                  console.log(err)
+                  res.status(500).send('Error updating')
+                } else {
+                  res.status(200).json(personPropsToUpdate)
+                }
+              }
+            )
+          } else {
+            res.status(404).send(`not found`)
+          }
         }
-      })
-    }
+      }
+    )
+  })
+
+  //DELETE for person/:id//
+  router.delete('/:id', (req, res) => {
+    const personId = req.params.id
+    //DELETE into person_has_thematic
+    const sql = `DELETE FROM person_has_thematic WHERE
+        person_person_id=?`
+    mysql.query(sql, [personId], (err, result) => {
+      if (err) {
+        res.status(500).send('1st error')
+      } else {
+        //DELETE into person_has_language
+        const sql2 = `DELETE FROM person_has_language WHERE
+        person_person_id=?`
+        mysql.query(sql2, [personId], (err, result2) => {
+          if (err) {
+            res.status(500).send('2st error')
+          } else {
+            //DELETE into person
+            const sql3 = 'DELETE FROM person WHERE person.person_id=?'
+            mysql.query(sql3, [personId], (err, result3) => {
+              if (err) {
+                console.log(err)
+                res.status(500).send('Error deleting a greeter')
+              } else {
+                res.status(200).send('Greeter deleted!')
+              }
+            })
+          }
+        })
+      }
+    })
   })
 })
 
