@@ -24,13 +24,9 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use('/person', routes.person)
 app.use('/city', routes.city)
-<<<<<<< HEAD
-app.use('/concept', routes.concept)
-app.use('/contact', routes.contact)
-=======
 app.use('/description', routes.description)
 app.use('/valeur', routes.valeur)
->>>>>>> 04b5187bbd3f8e2b2f1aed4e1e9f701ddb18f09a
+app.use('/concept', routes.concept)
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
