@@ -4,7 +4,7 @@ const mysql = require('../db-config')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-  //all city//
+  //get for all cities//
   mysql.query('SELECT * FROM city ', (err, result) => {
     if (err) {
       res.status(500).send('Error from Database')
@@ -14,7 +14,23 @@ router.get('/', (req, res) => {
   })
 })
 
-//AJOUTER UN POST ICI//
+//Get for City/:id//
+router.get('/:id', (req, res) => {
+  const cityId = req.params.id
+  mysql.query(
+    `SELECT * FROM city WHERE city.city_id=?`,
+    [cityId],
+    (err, result) => {
+      if (err) {
+        res.status(500).send(err)
+      } else {
+        res.status(200).json(result)
+      }
+    }
+  )
+})
+
+//post for City//
 router.post('/', (req, res) => {
   const cityData = [
     req.body.city_title_fr,
@@ -36,6 +52,53 @@ router.post('/', (req, res) => {
       res.status(500).send(err)
     } else {
       res.status(200).json(result)
+    }
+  })
+})
+
+// create PUT for city/:id//
+router.put('/:id', (req, res) => {
+  const cityId = req.params.id
+  mysql.query(
+    'SELECT * FROM city WHERE city.city_id=?',
+    [cityId],
+    (err, selectResult) => {
+      if (err) {
+        console.log(err)
+        res.status(500).send('Error updating a city')
+      } else {
+        const cityFromDb = selectResult[0]
+        if (cityFromDb) {
+          const cityToUpdate = req.body
+          mysql.query(
+            'UPDATE city SET ? WHERE city.city_id=?',
+            [cityToUpdate, cityId],
+            err => {
+              if (err) {
+                console.log(err)
+                res.status(500).send('Error updating a city')
+              } else {
+                //const updated = { ...cityFromDb, ...cityToUpdate }
+                res.status(200).json(cityToUpdate)
+              }
+            }
+          )
+        } else {
+          res.status(404).send(`City with id ${cityId} not found.`)
+        }
+      }
+    }
+  )
+})
+//DELETE for city/:id//
+router.delete('/:id', (req, res) => {
+  const cityId = req.params.id
+  mysql.query('DELETE FROM city WHERE city.city_id=?', [cityId], err => {
+    if (err) {
+      console.log(err)
+      res.status(500).send('Error deleting a city')
+    } else {
+      res.status(200).send('City deleted!')
     }
   })
 })
