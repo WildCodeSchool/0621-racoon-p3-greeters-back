@@ -87,6 +87,40 @@ router.get('/:id', (req, res) => {
   )
 })
 
+router.get('/:id', (req, res) => {
+  //All greeters
+  mysql.query(
+    'SELECT p.* FROM person as p WHERE p.person_id=1',
+    (err, result) => {
+      if (err) {
+        res.status(500).send('error from database')
+      } else {
+        console.log(result)
+        mysql.query(
+          'SELECT pht.thematic_fr_thematics_fr_id, t.thematic_fr_title, t.thematic_fr_name FROM person_has_thematic_fr as pht JOIN person as p ON pht.person_person_id=p.person_id JOIN thematic_fr as t ON pht.thematic_fr_thematics_fr_id = t.thematics_fr_id',
+          (err, result2) => {
+            if (err) {
+              res.status(500).send('error from database')
+            } else {
+              console.log(result2)
+              mysql.query(
+                'SELECT pht.language_fr_language_fr_id, t.language_fr_title, t.language_fr_name FROM person_has_language_fr as pht JOIN person as p ON pht.person_person_id=p.person_id JOIN language_fr as t ON pht.language_fr_language_fr_id = t.language_fr_id',
+                (err, result3) => {
+                  if (err) {
+                    res.status(500).send('error from database')
+                  } else {
+                    console.log(result3)
+                    res.status(200).json({ result, result2, result3 })
+                  }
+              }
+            )
+          }
+        }
+      )
+    }
+  }
+)
+
 router.post('/', (req, res) => {
   const bodyData = [
     req.body.person_firstname,
