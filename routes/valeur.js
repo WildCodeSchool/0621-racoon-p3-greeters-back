@@ -44,7 +44,6 @@ router.put('/:lang', (req, res) => {
             console.log(err)
             res.status(500).send('Error updating value')
           } else {
-            //const updated = { ...cityFromDb, ...cityToUpdate }
             res.status(200).json(valueToUpdate)
           }
         })
