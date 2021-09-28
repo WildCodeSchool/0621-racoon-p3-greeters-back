@@ -93,17 +93,13 @@ router.put('/:id', (req, res) => {
 //DELETE for city/:id//
 router.delete('/:id', (req, res) => {
   const cityId = req.params.id
-  mysql.query(
-    'DELETE FROM city WHERE city.city_id=?',
-    [cityId],
-    (err, results) => {
-      if (err) {
-        console.log(err)
-        res.status(500).send('Error deleting a city')
-      } else {
-        res.status(200).send('City deleted!')
-      }
+  mysql.query('DELETE FROM city WHERE city.city_id=?', [cityId], err => {
+    if (err) {
+      console.log(err)
+      res.status(500).send('Error deleting a city')
+    } else {
+      res.status(200).send('City deleted!')
     }
-  )
+  })
 })
 module.exports = router
