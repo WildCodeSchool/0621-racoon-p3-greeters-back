@@ -3,9 +3,9 @@ const mysql = require('../db-config')
 
 const router = express.Router()
 
-router.get('/:limit?', (req, res) => {
+router.get('/', (req, res) => {
   let sql = `SELECT * FROM person as p JOIN city ON city.city_id=person_city_id`
-  if (req.params.limit) {
+  if (req.query.limit) {
     sql += ` LIMIT 4`
   }
   mysql.query(sql, (err, result) => {
