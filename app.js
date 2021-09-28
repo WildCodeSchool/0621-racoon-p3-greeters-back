@@ -31,10 +31,6 @@ app.use('/description', routes.description)
 app.use('/valeur', routes.valeur)
 app.use('/concept', routes.concept)
 
-const server = app.listen(3001, function () {
-  console.log('server is running at %s', server.address(3001))
-})
-
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
 })
