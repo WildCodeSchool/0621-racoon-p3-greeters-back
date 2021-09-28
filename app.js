@@ -19,7 +19,6 @@ connection.connect(err => {
   }
 })
 
-app.use(serve(__dirname + '/assets'))
 app.use(express.static('assets'))
 app.use(cors())
 app.use(morgan('tiny'))
