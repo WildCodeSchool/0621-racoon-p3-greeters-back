@@ -4,42 +4,42 @@ const mysql = require('../db-config')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-  //all greteers//
-  mysql.query(
-    `SELECT * FROM person as p JOIN city ON city.city_id=person_city_id`,
-    (err, result) => {
-      if (err) {
-        res.status(500).send('Error from Database')
-      } else {
-        console.log(result)
-        mysql.query(
-          //get thematic with greeter id
-          'SELECT pht.person_person_id,t.* FROM person_has_thematic AS pht LEFT JOIN thematic AS t ON pht.thematic_thematic_id = t.thematic_id',
-          (err, result2) => {
-            if (err) {
-              res.status(500).send('2nd error from database')
-            } else {
-              mysql.query(
-                //get language with greeter id
-                'SELECT phl.person_person_id,l.* FROM person_has_language AS phl LEFT JOIN languages AS l ON phl.language_language_id = l.language_id',
-                (err, result3) => {
-                  if (err) {
-                    res.status(500).send('3rd error from database')
-                  } else {
-                    res.status(200).json({
-                      result,
-                      result2,
-                      result3
-                    })
-                  }
+  let sql = `SELECT * FROM person as p JOIN city ON city.city_id=person_city_id`
+  if (req.query.limit) {
+    sql += ` LIMIT 4`
+  }
+  mysql.query(sql, (err, result) => {
+    if (err) {
+      res.status(500).send('Error from Database')
+    } else {
+      console.log(result)
+      mysql.query(
+        //get thematic with greeter id
+        'SELECT pht.person_person_id,t.* FROM person_has_thematic AS pht LEFT JOIN thematic AS t ON pht.thematic_thematic_id = t.thematic_id',
+        (err, result2) => {
+          if (err) {
+            res.status(500).send('2nd error from database')
+          } else {
+            mysql.query(
+              //get language with greeter id
+              'SELECT phl.person_person_id,l.* FROM person_has_language AS phl LEFT JOIN languages AS l ON phl.language_language_id = l.language_id',
+              (err, result3) => {
+                if (err) {
+                  res.status(500).send('3rd error from database')
+                } else {
+                  res.status(200).json({
+                    result,
+                    result2,
+                    result3
+                  })
                 }
-              )
-            }
+              }
+            )
           }
-        )
-      }
+        }
+      )
     }
-  )
+  })
 })
 
 //get a greeter by id
