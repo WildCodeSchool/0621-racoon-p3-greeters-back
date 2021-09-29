@@ -45,4 +45,16 @@ router.post('/', (req, res) => {
   }
 })
 
+//DELETE for person/:id//
+// router.delete('/', (req, res) => {
+//   const sql = `DELETE FROM contact WHERE contact_id=1`
+//   mysql.query(sql, (err, result) => {
+//     if (err) {
+//       res.status(500).send('1st error')
+//     } else {
+//       res.status(200).send('Message deleted!')
+//     }
+//   })
+// })
+
 module.exports = router
