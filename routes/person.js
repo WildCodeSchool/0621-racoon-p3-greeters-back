@@ -42,55 +42,12 @@ router.get('/', (req, res) => {
   })
 })
 
-//get a greeter by id
-router.get('/:id', (req, res) => {
-  const greeterId = req.params.id
-  mysql.query(
-    //get greeter by id
-    'SELECT * FROM person as p JOIN city ON city.city_id=person_city_id WHERE p.person_id=? ',
-    [greeterId],
-    (err, result) => {
-      if (err) {
-        res.status(500).send(' 1st error from database')
-      } else {
-        console.log(result)
-        mysql.query(
-          //get thematic with greeter id
-          'SELECT pht.person_person_id,t.* FROM person_has_thematic AS pht LEFT JOIN thematic AS t ON pht.thematic_thematic_id = t.thematic_id WHERE pht.person_person_id= ?',
-          [greeterId],
-          (err, result2) => {
-            if (err) {
-              res.status(500).send('2nd error from database')
-            } else {
-              console.log(result2)
-              mysql.query(
-                //get language with greeter id
-                'SELECT phl.person_person_id,l.* FROM person_has_language AS phl LEFT JOIN languages AS l ON phl.language_language_id = l.language_id WHERE phl.person_person_id= ?',
-                [greeterId],
-                (err, result3) => {
-                  if (err) {
-                    res.status(500).send('3rd error from database')
-                  } else {
-                    res.status(200).json({
-                      result,
-                      result2,
-                      result3
-                    })
-                  }
-                }
-              )
-            }
-          }
-        )
-      }
-    }
-  )
-})
-
 router.get('/:id', (req, res) => {
   //All greeters
+  const personId = req.params.id
   mysql.query(
-    'SELECT p.* FROM person as p WHERE p.person_id=1',
+    'SELECT p.* FROM person as p WHERE p.person_id=?',
+    [personId],
     (err, result) => {
       if (err) {
         res.status(500).send('error from database')

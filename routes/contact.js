@@ -1,7 +1,6 @@
 const express = require('express')
 const mysql = require('../db-config')
-
-const Joi = require('joi')
+const nodemailer = require('nodemailer')
 
 const router = express.Router()
 
@@ -18,6 +17,7 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   const { firstname, lastname, civility, mail, object, message } = req.body.data
 
+  /*
   const { error } = Joi.object({
     mail: Joi.string().email().max(255).required(),
     firstname: Joi.string().max(255).required(),
@@ -28,21 +28,22 @@ router.post('/', (req, res) => {
   if (error) {
     res.status(422).json({ validationErrors: error.details })
   } else {
-    const sql =
-      'INSERT INTO contact (contact_object, contact_message, contact_lastname, contact_firstname, contact_civility, contact_mail, contact_treated, contact_date) VALUES (?, ?, ?, ?, ?, ?, false, NOW())'
-    mysql.query(
-      sql,
-      [object, message, lastname, firstname, civility, mail],
-      (err, result) => {
-        if (err) {
-          console.log(err)
-          res.status(500).send('Error from database')
-        } else {
-          res.status(200).json(result)
-        }
+  */
+  const sql =
+    'INSERT INTO contact (contact_object, contact_message, contact_lastname, contact_firstname, contact_civility, contact_mail, contact_treated, contact_date) VALUES (?, ?, ?, ?, ?, ?, false, NOW())'
+  mysql.query(
+    sql,
+    [object, message, lastname, firstname, civility, mail],
+    (err, result) => {
+      if (err) {
+        console.log(err)
+        res.status(500).send('Error from database')
+      } else {
+        res.status(200).json(result)
       }
-    )
-  }
+    }
+  )
+  /*}*/
 })
 
 //DELETE for person/:id//
