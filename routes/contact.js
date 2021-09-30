@@ -1,6 +1,7 @@
 const express = require('express')
-const Joi = require('joi')
 const mysql = require('../db-config')
+
+const Joi = require('joi')
 
 const router = express.Router()
 
@@ -13,8 +14,9 @@ router.get('/', (req, res) => {
     }
   })
 })
+
 router.post('/', (req, res) => {
-  const { firstname, lastname, civility, mail, object, message } = req.body
+  const { firstname, lastname, civility, mail, object, message } = req.body.data
 
   const { error } = Joi.object({
     mail: Joi.string().email().max(255).required(),
@@ -27,10 +29,10 @@ router.post('/', (req, res) => {
     res.status(422).json({ validationErrors: error.details })
   } else {
     const sql =
-      'INSERT INTO contact (contact_object, contact_message, contact_lastname, contact_civility, contact_firstname, contact_mail, contact_treated, contact_date) VALUES (?, ?, ?, ?, ?, ?, false, NOW())'
+      'INSERT INTO contact (contact_object, contact_message, contact_lastname, contact_firstname, contact_civility, contact_mail, contact_treated, contact_date) VALUES (?, ?, ?, ?, ?, ?, false, NOW())'
     mysql.query(
       sql,
-      [object, message, lastname, civility, firstname, mail],
+      [object, message, lastname, firstname, civility, mail],
       (err, result) => {
         if (err) {
           console.log(err)

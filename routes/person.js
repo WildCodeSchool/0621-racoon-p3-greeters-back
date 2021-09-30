@@ -4,42 +4,42 @@ const mysql = require('../db-config')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-  //all greteers//
-  mysql.query(
-    `SELECT * FROM person as p JOIN city ON city.city_id=person_city_id`,
-    (err, result) => {
-      if (err) {
-        res.status(500).send('Error from Database')
-      } else {
-        console.log(result)
-        mysql.query(
-          //get thematic with greeter id
-          'SELECT pht.person_person_id,t.* FROM person_has_thematic AS pht LEFT JOIN thematic AS t ON pht.thematic_thematic_id = t.thematic_id',
-          (err, result2) => {
-            if (err) {
-              res.status(500).send('2nd error from database')
-            } else {
-              mysql.query(
-                //get language with greeter id
-                'SELECT phl.person_person_id,l.* FROM person_has_language AS phl LEFT JOIN languages AS l ON phl.language_language_id = l.language_id',
-                (err, result3) => {
-                  if (err) {
-                    res.status(500).send('3rd error from database')
-                  } else {
-                    res.status(200).json({
-                      result,
-                      result2,
-                      result3
-                    })
-                  }
+  let sql = `SELECT * FROM person as p JOIN city ON city.city_id=person_city_id`
+  if (req.query.limit) {
+    sql += ` LIMIT 4`
+  }
+  mysql.query(sql, (err, result) => {
+    if (err) {
+      res.status(500).send('Error from Database')
+    } else {
+      console.log(result)
+      mysql.query(
+        //get thematic with greeter id
+        'SELECT pht.person_person_id,t.* FROM person_has_thematic AS pht LEFT JOIN thematic AS t ON pht.thematic_thematic_id = t.thematic_id',
+        (err, result2) => {
+          if (err) {
+            res.status(500).send('2nd error from database')
+          } else {
+            mysql.query(
+              //get language with greeter id
+              'SELECT phl.person_person_id,l.* FROM person_has_language AS phl LEFT JOIN languages AS l ON phl.language_language_id = l.language_id',
+              (err, result3) => {
+                if (err) {
+                  res.status(500).send('3rd error from database')
+                } else {
+                  res.status(200).json({
+                    result,
+                    result2,
+                    result3
+                  })
                 }
-              )
-            }
+              }
+            )
           }
-        )
-      }
+        }
+      )
     }
-  )
+  })
 })
 
 //get a greeter by id
@@ -137,34 +137,103 @@ router.post('/', (req, res) => {
 })
 
 //Update a greeter by ID//
+// router.put('/:id', (req, res) => {
+//   const personId = req.params.id
+//   mysql.query(
+//     'SELECT * FROM person as p JOIN city ON city.city_id=person_city_id WHERE p.person_id=?',
+//     [personId],
+//     (err, result) => {
+//       if (err) {
+//         res.status(500).send(err + '1st Error updating')
+//       } else {
+//         mysql.query(
+//           //get thematic with greeter id
+//           'SELECT pht.person_person_id,t.* FROM person_has_thematic AS pht LEFT JOIN thematic AS t ON pht.thematic_thematic_id = t.thematic_id WHERE pht.person_person_id= ?',
+//           [personId],
+//           (err, result2) => {
+//             if (err) {
+//               res.status(500).send(err + '2nd error from database')
+//             } else {
+//               console.log(result2)
+//               mysql.query(
+//                 //get language with greeter id
+//                 'SELECT phl.person_person_id,l.* FROM person_has_language AS phl LEFT JOIN languages AS l ON phl.language_language_id = l.language_id WHERE phl.person_person_id= ?',
+//                 [personId],
+//                 (err, result3) => {
+//                   if (err) {
+//                     res.status(500).send(err + '3rd error from database')
+//                   } else {
+//                     const personFromDb = result[0]
+//                     if (personFromDb) {
+//                       const personPropsToUpdate = req.body
+//                       mysql.query(
+//                         'UPDATE person SET ? WHERE person.person_id = ?',
+//                         [personPropsToUpdate, personId],
+//                         err => {
+//                           if (err) {
+//                             res.status(500).send(err + '4th Error updating')
+//                           } else {
+//                             res.status(200).json(personPropsToUpdate)
+//                           }
+//                         }
+//                       )
+//                     } else {
+//                       res.status(404).send(`not found`)
+//                     }
+//                   }
+//                 }
+//               )
+//             }
+//           }
+//         )
+//       }
+//     }
+//   )
+// })
+
 router.put('/:id', (req, res) => {
   const personId = req.params.id
+  const personPropsToUpdate = req.body
   mysql.query(
-    'SELECT * FROM person WHERE person.person_id = ?',
-    [personId],
+    'UPDATE person SET ?  WHERE person.person_id = ?',
+    [personPropsToUpdate, personId],
+    err => {
+      if (err) {
+        res.status(500).send(err + 'Error updating')
+      } else {
+        res.status(200).json(personPropsToUpdate)
+      }
+    }
+  )
+})
+
+router.put('/them/:id', (req, res) => {
+  const personId = req.params.id
+  const personPropsToUpdate = req.body
+  mysql.query(
+    'UPDATE person_has_thematic SET ? WHERE person_has_thematic.person_person_id=?',
+    [personPropsToUpdate, personId],
     (err, result) => {
       if (err) {
-        console.log(err)
-        res.status(500).send('Error updating')
+        res.status(500).send(err + '1st Error updating')
       } else {
-        const personFromDb = result[0]
-        if (personFromDb) {
-          const personPropsToUpdate = req.body
-          mysql.query(
-            'UPDATE person SET ? WHERE person.person_id = ?',
-            [personPropsToUpdate, personId],
-            err => {
-              if (err) {
-                console.log(err)
-                res.status(500).send('Error updating')
-              } else {
-                res.status(200).json(personPropsToUpdate)
-              }
-            }
-          )
-        } else {
-          res.status(404).send(`not found`)
-        }
+        res.status(200).json(personPropsToUpdate)
+      }
+    }
+  )
+})
+
+router.put('/lang/:id', (req, res) => {
+  const personId = req.params.id
+  const personPropsToUpdate = req.body
+  mysql.query(
+    'UPDATE person_has_language SET ? WHERE person_has_language.person_person_id=?',
+    [personPropsToUpdate, personId],
+    (err, result) => {
+      if (err) {
+        res.status(500).send(err + '1st Error updating')
+      } else {
+        res.status(200).json(personPropsToUpdate)
       }
     }
   )
@@ -172,24 +241,25 @@ router.put('/:id', (req, res) => {
 
 //DELETE for person/:id//
 router.delete('/:id', (req, res) => {
+  console.log('salut')
   const personId = req.params.id
   //DELETE into person_has_thematic
   const sql = `DELETE FROM person_has_thematic WHERE
         person_person_id=?`
-  mysql.query(sql, [personId], (err, result) => {
+  mysql.query(sql, personId, (err, result) => {
     if (err) {
       res.status(500).send('1st error')
     } else {
       //DELETE into person_has_language
       const sql2 = `DELETE FROM person_has_language WHERE
         person_person_id=?`
-      mysql.query(sql2, [personId], (err, result2) => {
+      mysql.query(sql2, personId, (err, result2) => {
         if (err) {
           res.status(500).send('2st error')
         } else {
           //DELETE into person
           const sql3 = 'DELETE FROM person WHERE person.person_id=?'
-          mysql.query(sql3, [personId], (err, result3) => {
+          mysql.query(sql3, personId, (err, result3) => {
             if (err) {
               console.log(err)
               res.status(500).send('Error deleting a greeter')
