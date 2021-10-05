@@ -56,7 +56,7 @@ router.post('/', (req, res) => {
   })
 })
 
-// create PUT for city/:id//
+//PUT for city/:id//
 router.put('/:id', (req, res) => {
   const cityId = req.params.id
   mysql.query(
