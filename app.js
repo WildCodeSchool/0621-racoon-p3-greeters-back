@@ -28,9 +28,11 @@ app.use(express.static('assets'))
 app.use('/person', routes.person)
 app.use('/city', routes.city)
 app.use('/description', routes.description)
-app.use('/valeur', routes.valeur)
+app.use('/value', routes.value)
 app.use('/concept', routes.concept)
 app.use('/contact', routes.contact)
+app.use('/thematic', routes.them)
+app.use('/languages', routes.lang)
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
