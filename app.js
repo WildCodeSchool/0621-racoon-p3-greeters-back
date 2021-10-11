@@ -29,7 +29,6 @@ app.use('/city', routes.city)
 app.use('/description', routes.description)
 app.use('/value', routes.value)
 app.use('/concept', routes.concept)
-app.use('/contact', routes.contact)
 app.use('/thematic', routes.them)
 app.use('/languages', routes.lang)
 

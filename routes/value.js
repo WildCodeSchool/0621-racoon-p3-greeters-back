@@ -4,15 +4,9 @@ const mysql = require('../db-config')
 const router = express.Router()
 
 //get for valeur fr and en//
-router.get('/:lang', (req, res) => {
-  const lang = req.params.lang
-  const langReq = [
-    `value_title1_${lang}`,
-    `value_title2_${lang}`,
-    `value_content_${lang}`
-  ]
-  const sql = `SELECT value_id, ?, ?, value_photo, ? FROM value`
-  mysql.query(sql, langReq, (err, result) => {
+router.get('/', (req, res) => {
+  const sql = `SELECT * FROM value`
+  mysql.query(sql, (err, result) => {
     if (err) {
       res.status(500).send('Error from Database')
     } else {
