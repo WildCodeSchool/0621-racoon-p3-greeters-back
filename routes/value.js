@@ -15,37 +15,20 @@ router.get('/', (req, res) => {
   })
 })
 
-//put for valeur fr and en//
-router.put('/:lang', (req, res) => {
-  const lang = req.params.lang
-  const langReq = [
-    `value_title1_${lang}`,
-    `value_title2_${lang}`,
-    `value_content_${lang}`
-  ]
-  const sql = `SELECT value_id, ?, ?, value_photo, ? FROM value`
-  mysql.query(sql, langReq, (err, selectResult) => {
-    if (err) {
-      console.log(err)
-      res.status(500).send('Error updating value')
-    } else {
-      const valueFromDb = selectResult[0]
-      if (valueFromDb) {
-        const valueToUpdate = req.body
-        const sql2 = 'UPDATE value SET ? WHERE value.value_id=1'
-        mysql.query(sql2, [valueToUpdate, lang], err => {
-          if (err) {
-            console.log(err)
-            res.status(500).send('Error updating value')
-          } else {
-            //const updated = { ...cityFromDb, ...cityToUpdate }
-            res.status(200).json(valueToUpdate)
-          }
-        })
+router.put('/', (req, res) => {
+  const valueToUpdate = req.body
+  mysql.query(
+    'UPDATE value SET ? WHERE value.value_id=1',
+    [valueToUpdate],
+    err => {
+      if (err) {
+        console.log(err)
+        res.status(500).send('Error updating the value page')
       } else {
-        res.status(404).send(`not found.`)
+        res.status(200).json(valueToUpdate)
       }
     }
-  })
+  )
 })
+
 module.exports = router
