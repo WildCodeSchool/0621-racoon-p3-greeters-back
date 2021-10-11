@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/person', routes.person)
 app.use('/city', routes.city)
 app.use('/description', routes.description)
-app.use('/valeur', routes.valeur)
+app.use('/value', routes.value)
 app.use('/concept', routes.concept)
 //app.use('/contact', routes.contact)
 
