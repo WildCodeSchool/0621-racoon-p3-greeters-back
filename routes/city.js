@@ -33,19 +33,15 @@ router.get('/:id', (req, res) => {
 //post for City//
 router.post('/', (req, res) => {
   const cityData = [
-    req.body.city_title_fr,
-    req.body.city_title_en,
     req.body.city_name,
-    req.body.city_photo,
     req.body.city_description_fr,
     req.body.city_description_en,
-    req.body.city_legende_photo_fr,
-    req.body.city_legende_photo_en,
     req.body.city_lien,
     req.body.city_longitude,
-    req.body.city_latitude
+    req.body.city_latitude,
+    req.body.city_banner
   ]
-  const sql = `INSERT INTO city (city_title_fr, city_title_en, city_name, city_photo, city_description_fr, city_description_en, city_legende_photo_fr, city_legende_photo_en, city_lien, city_longitude, city_latitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  const sql = `INSERT INTO city (city_name, city_description_fr, city_description_en, city_lien, city_longitude, city_latitude, city_banner) VALUES (?, ?, ?, ?, ?, ?, ?)`
 
   mysql.query(sql, cityData, (err, result) => {
     if (err) {
@@ -56,7 +52,7 @@ router.post('/', (req, res) => {
   })
 })
 
-// create PUT for city/:id//
+//PUT for city/:id//
 router.put('/:id', (req, res) => {
   const cityId = req.params.id
   mysql.query(
