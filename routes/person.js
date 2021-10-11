@@ -12,7 +12,6 @@ router.get('/', (req, res) => {
     if (err) {
       res.status(500).send('Error from Database')
     } else {
-      console.log(result)
       mysql.query(
         //get thematic with greeter id
         'SELECT pht.person_person_id,t.* FROM person_has_thematic AS pht LEFT JOIN thematic AS t ON pht.thematic_thematic_id = t.thematic_id',
@@ -53,7 +52,6 @@ router.get('/:id', (req, res) => {
       if (err) {
         res.status(500).send(' 1st error from database')
       } else {
-        console.log(result)
         mysql.query(
           //get thematic with greeter id
           'SELECT pht.person_person_id,t.* FROM person_has_thematic AS pht LEFT JOIN thematic AS t ON pht.thematic_thematic_id = t.thematic_id WHERE pht.person_person_id= ?',
@@ -62,7 +60,6 @@ router.get('/:id', (req, res) => {
             if (err) {
               res.status(500).send('2nd error from database')
             } else {
-              console.log(result2)
               mysql.query(
                 //get language with greeter id
                 'SELECT phl.person_person_id,l.* FROM person_has_language AS phl LEFT JOIN languages AS l ON phl.language_language_id = l.language_id WHERE phl.person_person_id= ?',
@@ -102,25 +99,25 @@ router.post('/', (req, res) => {
   const sql = `INSERT INTO person
     (person_firstname, person_lastname, person_photo, person_catch_phrase_fr, person_description_fr, person_catch_phrase_en, person_description_en, person_city_id)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-
+  console.log(req.body)
   mysql.query(sql, bodyData, (err, result) => {
     if (err) {
       res.status(500).send('1st error from database')
     } else {
       //Post into person_has_thematic
       const sql2 = `INSERT INTO person_has_thematic
-        (person_person_id, thematic_thematic_id)
-        VALUES (?, ?)`
+          (person_person_id, thematic_thematic_id)
+          VALUES (?, ?)`
       const idperson = result.insertId
       const themData = [idperson, req.body.thematic_thematic_id]
       mysql.query(sql2, themData, (err, result2) => {
         if (err) {
-          res.status(500).send('2nd')
+          res.status(500).send(err)
         } else {
           //Post into person_has_language
           const sql3 = `INSERT INTO person_has_language
-            (person_person_id, language_language_id)
-            VALUES (?, ?)`
+              (person_person_id, language_language_id)
+              VALUES (?, ?)`
           const idperson = result.insertId
           const langData = [idperson, req.body.language_language_id]
           mysql.query(sql3, langData, (err, result3) => {
