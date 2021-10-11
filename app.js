@@ -29,7 +29,7 @@ app.use('/city', routes.city)
 app.use('/description', routes.description)
 app.use('/valeur', routes.valeur)
 app.use('/concept', routes.concept)
-app.use('/contact', routes.contact)
+//app.use('/contact', routes.contact)
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
