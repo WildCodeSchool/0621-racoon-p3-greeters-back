@@ -19,7 +19,7 @@ connection.connect(err => {
   }
 })
 
-app.use(express.static('assets'))
+
 app.use(cors())
 app.use(morgan('tiny'))
 app.use(express.json())
