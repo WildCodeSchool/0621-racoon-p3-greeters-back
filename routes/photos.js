@@ -17,10 +17,23 @@ router.get('/', (req, res) => {
   )
 })
 
-//Get for photos by id//
+//Get for photo by id
 router.get('/:id', (req, res) => {
   const photoId = req.params.id
-  const sql = `SELECT * FROM photos JOIN city ON city.city_id=city_city_id WHERE photos.city_city_id=?`
+  const sql = `SELECT * FROM photos JOIN city ON city.city_id=city_city_id WHERE photos.photos_id=?`
+  mysql.query(sql, [photoId], (err, result) => {
+    if (err) {
+      res.status(500).send(err)
+    } else {
+      res.status(200).json(result)
+    }
+  })
+})
+
+//Get for photos in admin by city id
+router.get('/admin/:id', (req, res) => {
+  const photoId = req.params.id
+  const sql = `SELECT * FROM photos WHERE photos.city_city_id=?`
   mysql.query(sql, [photoId], (err, result) => {
     if (err) {
       res.status(500).send(err)
