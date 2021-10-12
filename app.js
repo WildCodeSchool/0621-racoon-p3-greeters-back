@@ -31,6 +31,7 @@ app.use('/value', routes.value)
 app.use('/concept', routes.concept)
 app.use('/thematic', routes.them)
 app.use('/languages', routes.lang)
+app.use('/photos', routes.photos)
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)

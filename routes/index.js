@@ -5,6 +5,7 @@ const description = require('./description')
 const value = require('./value')
 const them = require('./thematic')
 const lang = require('./language')
+const photos = require('./photos')
 
 module.exports = {
   person,
@@ -13,5 +14,6 @@ module.exports = {
   description,
   concept,
   them,
-  lang
+  lang,
+  photos
 }
