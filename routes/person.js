@@ -99,7 +99,6 @@ router.post('/', (req, res) => {
   const sql = `INSERT INTO person
     (person_firstname, person_lastname, person_photo, person_catch_phrase_fr, person_description_fr, person_catch_phrase_en, person_description_en, person_city_id)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-  console.log(req.body)
   mysql.query(sql, bodyData, (err, result) => {
     if (err) {
       res.status(500).send('1st error from database')
@@ -238,7 +237,6 @@ router.put('/lang/:id', (req, res) => {
 
 //DELETE for person/:id//
 router.delete('/:id', (req, res) => {
-  console.log('salut')
   const personId = req.params.id
   //DELETE into person_has_thematic
   const sql = `DELETE FROM person_has_thematic WHERE
