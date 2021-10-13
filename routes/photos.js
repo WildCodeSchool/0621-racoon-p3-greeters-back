@@ -4,7 +4,7 @@ const mysql = require('../db-config')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-  //get for photos
+  //Get for photos
   mysql.query(
     'SELECT * FROM photos JOIN city ON city.city_id=city_city_id',
     (err, result) => {
@@ -17,10 +17,23 @@ router.get('/', (req, res) => {
   )
 })
 
-//Get for photos by id//
+//Get for photo by id
 router.get('/:id', (req, res) => {
   const photoId = req.params.id
   const sql = `SELECT * FROM photos JOIN city ON city.city_id=city_city_id WHERE photos.photos_id=?`
+  mysql.query(sql, [photoId], (err, result) => {
+    if (err) {
+      res.status(500).send(err)
+    } else {
+      res.status(200).json(result)
+    }
+  })
+})
+
+//Get for photos in admin by city id
+router.get('/admin/:id', (req, res) => {
+  const photoId = req.params.id
+  const sql = `SELECT * FROM photos WHERE photos.city_city_id=?`
   mysql.query(sql, [photoId], (err, result) => {
     if (err) {
       res.status(500).send(err)
@@ -46,6 +59,23 @@ router.post('/', (req, res) => {
       res.status(200).json(result)
     }
   })
+})
+
+//PUT for photo by ID
+router.put('/:id', (req, res) => {
+  const photosId = req.params.id
+  const photosPropsToUpdate = req.body
+  mysql.query(
+    'UPDATE photos SET ?  WHERE photos.photos_id = ?',
+    [photosPropsToUpdate, photosId],
+    err => {
+      if (err) {
+        res.status(500).send(err + 'Error updating')
+      } else {
+        res.status(200).json(photosPropsToUpdate)
+      }
+    }
+  )
 })
 
 //DELETE photo by Id
