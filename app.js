@@ -5,6 +5,8 @@ const app = express()
 const cors = require('cors')
 const morgan = require('morgan')
 const routes = require('./routes/index')
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 const port = process.env.PORT || 3000
 
@@ -32,6 +34,8 @@ app.use('/concept', routes.concept)
 app.use('/thematic', routes.them)
 app.use('/languages', routes.lang)
 app.use('/photos', routes.photos)
+app.use('/admin', routes.admin)
+app.use('/auth', routes.auth)
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
