@@ -6,6 +6,8 @@ const cors = require('cors')
 const morgan = require('morgan')
 const routes = require('./routes/index')
 
+require('dotenv').config()
+
 const port = process.env.PORT || 3000
 
 app.use(express.json())
@@ -18,7 +20,6 @@ connection.connect(err => {
     console.log('connected as id ' + connection.threadId)
   }
 })
-
 
 app.use(cors())
 app.use(morgan('tiny'))
