@@ -3,6 +3,30 @@ const mysql = require('../db-config')
 
 const router = express.Router()
 
+router.get('/filter', (req, res) => {
+  const sql = `SELECT p.*, group_concat(distinct c.city_name) as person_city_name, group_concat(distinct l.language_name_fr) as person_language_fr, group_concat(distinct l.language_name_en) as person_language_en, group_concat(distinct t.thematic_name_fr) as person_thematic_fr, group_concat(distinct t.thematic_name_en) as person_thematic_en
+  FROM person as p 
+  JOIN city as c
+    ON c.city_id=person_city_id 
+  join person_has_thematic as pht 
+    on p.person_id=pht.person_person_id 
+  join thematic as t 
+    on pht.thematic_thematic_id=t.thematic_id
+  join person_has_language as phl 
+    on p.person_id=phl.person_person_id  
+  join languages as l 
+    on phl.language_language_id=l.language_id
+  group by p.person_id;`
+
+  mysql.query(sql, (err, result) => {
+    if (err) {
+      res.status(500).send('Error from Database')
+    } else {
+      res.status(200).json(result)
+    }
+  })
+})
+
 router.get('/', (req, res) => {
   let sql = `SELECT * FROM person as p JOIN city ON city.city_id=person_city_id`
   if (req.query.limit) {

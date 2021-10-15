@@ -6,6 +6,8 @@ const value = require('./value')
 const them = require('./thematic')
 const lang = require('./language')
 const photos = require('./photos')
+const admin = require('./admin')
+const auth = require('./auth')
 
 
 module.exports = {
@@ -16,5 +18,7 @@ module.exports = {
   concept,
   them,
   lang,
-  photos
+  photos,
+  admin,
+  auth
 }
