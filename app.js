@@ -7,7 +7,6 @@ const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const routes = require('./routes/index')
 const jwt = require('jsonwebtoken')
-require('dotenv').config()
 
 require('dotenv').config()
 

@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   const cityId = req.params.id
   mysql.query(
-    `SELECT * FROM city WHERE city.city_id=?`,
+    `SELECT * FROM city JOIN photos ON city_city_id=city_id WHERE city_id=?`,
     [cityId],
     (err, result) => {
       if (err) {
