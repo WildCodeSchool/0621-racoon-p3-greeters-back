@@ -32,27 +32,43 @@ const verifyPassword = (plainPassword, hashedPassword) => {
   return argon2.verify(hashedPassword, plainPassword, hashingOptions)
 }
 
+const getToken = req => {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(' ')[0] === 'Bearer'
+  ) {
+    return req.headers.authorization.split(' ')[1]
+  } else if (req.query && req.query.token) {
+    return req.query.token
+  }
+  return null
+}
+
 router.post('/', (req, res) => {
-  let adminData
-  mysql.query(`SELECT * FROM admin`, (err, result) => {
-    if (err) {
-      res.status(500).send(err)
-    } else {
-      adminData = result[0]
+  const { log, password } = req.body
+  console.log(req.body)
+  findByLog(log).then(user => {
+    if (!user) res.status(401).send('Invalid log')
+    else {
+      verifyPassword(password, user.admin_passw).then(passwC => {
+        if (passwC) {
+          const token = calculateToken(log)
+          res.send(token)
+        } else res.send('Invalid')
+      })
     }
-    const { log, password } = req.body
-    console.log(req.body)
-    findByLog(log).then(u => {
-      if (!u) res.status(401).send('Invalid log')
-      else {
-        verifyPassword(password, adminData.admin_passw).then(passwC => {
-          if (passwC) {
-            const token = calculateToken(log)
-            res.send(token)
-          } else res.send('Invalid')
-        })
-      }
-    })
+  })
+})
+
+router.post('/protected', (req, res) => {
+  const token = getToken(req)
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      console.log(err)
+      return res.status(200).send({ mess: 'nappa a acces au donnes' })
+    }
+    console.log('decode', decoded)
+    return res.status(200).send({ mess: 'La moula' })
   })
 })
 

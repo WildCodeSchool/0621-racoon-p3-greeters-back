@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
   //get for all cities//
   mysql.query('SELECT * FROM city ', (err, result) => {
     if (err) {
-      res.status(500).send('Error from Database')
+      res.status(500).send(' 1 Error from Database')
     } else {
       res.status(200).json(result)
     }
