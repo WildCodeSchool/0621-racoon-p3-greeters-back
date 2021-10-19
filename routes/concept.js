@@ -3,7 +3,7 @@ const mysql = require('../db-config')
 
 const router = express.Router()
 
-router.get('', (req, res) => {
+router.get('/', (req, res) => {
   const sql = `SELECT * FROM concept`
   mysql.query(sql, (err, result) => {
     if (err) {
