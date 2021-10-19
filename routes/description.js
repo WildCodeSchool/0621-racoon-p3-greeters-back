@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get('/', (req, res) => {
   //all description//
-  const sql = `SELECT * FROM description WHERE description.description_id=2`
+  const sql = `SELECT * FROM description WHERE description.description_id=1`
   mysql.query(sql, (err, result) => {
     if (err) {
       res.status(500).send('Error from Database')
@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 router.put('/', (req, res) => {
   const descriptionToUpdate = req.body
   mysql.query(
-    'UPDATE description SET ? WHERE description.description_id=2',
+    'UPDATE description SET ? WHERE description.description_id=1',
     [descriptionToUpdate],
     err => {
       if (err) {
