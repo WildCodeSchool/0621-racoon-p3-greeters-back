@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get('/', (req, res) => {
   //get for all cities//
-  mysql.query('SELECT * FROM city ', (err, result) => {
+  mysql.query('SELECT * FROM city', (err, result) => {
     if (err) {
       res.status(500).send('Error from Database')
     } else {

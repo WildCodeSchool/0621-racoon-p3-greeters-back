@@ -1,12 +1,10 @@
 const express = require('express')
 const connection = require('./db-config')
-const serve = require('express-static')
 const app = express()
 const cors = require('cors')
 const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const routes = require('./routes/index')
-const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 const port = process.env.PORT || 3000
