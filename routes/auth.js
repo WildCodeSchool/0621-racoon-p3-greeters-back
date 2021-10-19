@@ -51,7 +51,6 @@ const getToken = req => {
 //Post route to check if password is valid
 router.post('/', (req, res) => {
   const { log, password } = req.body
-  console.log(req.body)
   findByLog(log).then(user => {
     if (!user) res.status(401).send('Invalid log')
     else {
