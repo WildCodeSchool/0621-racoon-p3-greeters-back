@@ -8,12 +8,14 @@ const mysql = require('../db-config')
 
 const router = express.Router()
 
+//Calculate Token with jwt
 const calculateToken = (userEmail = '') => {
   return jwt.sign({ log: userEmail }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: '1800s'
   })
 }
 
+//Find admin in DB
 const findByLog = log => {
   return db
     .query('SELECT * FROM admin WHERE admin_log = ?', [log])
@@ -28,10 +30,12 @@ const hashingOptions = {
   parallelism: 1
 }
 
+//Check password
 const verifyPassword = (plainPassword, hashedPassword) => {
   return argon2.verify(hashedPassword, plainPassword, hashingOptions)
 }
 
+//Get token from req
 const getToken = req => {
   if (
     req.headers.authorization &&
@@ -44,6 +48,7 @@ const getToken = req => {
   return null
 }
 
+//Post route to check if password is valid
 router.post('/', (req, res) => {
   const { log, password } = req.body
   console.log(req.body)
@@ -60,16 +65,20 @@ router.post('/', (req, res) => {
   })
 })
 
+//Post route, check if token is valid
 router.post('/protected', (req, res) => {
   const token = getToken(req)
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if (err) {
-      console.log(err)
-      return res.status(200).send({ mess: 'nappa a acces au donnes' })
+  jwt.verify(
+    JSON.parse(token),
+    process.env.ACCESS_TOKEN_SECRET,
+    (err, decoded) => {
+      if (err) {
+        return res.status(401).send('Error')
+      }
+      console.log('decode', decoded)
+      return res.status(200).send('Success')
     }
-    console.log('decode', decoded)
-    return res.status(200).send({ mess: 'La moula' })
-  })
+  )
 })
 
 module.exports = router
