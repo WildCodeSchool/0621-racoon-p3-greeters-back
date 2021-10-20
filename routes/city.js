@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
   //get for all cities//
   mysql.query('SELECT * FROM city', (err, result) => {
     if (err) {
-      res.status(500).send('Error from Database')
+      res.status(500).send(' 1 Error from Database')
     } else {
       res.status(200).json(result)
     }
@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   const cityId = req.params.id
   mysql.query(
-    `SELECT * FROM city WHERE city.city_id=?`,
+    `SELECT * FROM city JOIN photos ON city_city_id=city_id WHERE city_id=?`,
     [cityId],
     (err, result) => {
       if (err) {

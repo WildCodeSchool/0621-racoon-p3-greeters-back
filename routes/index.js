@@ -9,6 +9,7 @@ const photos = require('./photos')
 const admin = require('./admin')
 const auth = require('./auth')
 
+
 module.exports = {
   person,
   city,
