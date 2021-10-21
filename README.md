@@ -22,4 +22,8 @@ Pour démarrer le serveur :
 
 Pour accéder à la route du back :
 
+Mettre le lien du port ouvert par le back
+
+exemple :
+
 `localhost:5000/`
