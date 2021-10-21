@@ -1,13 +1,10 @@
 const express = require('express')
 const connection = require('./db-config')
-const serve = require('express-static')
 const app = express()
 const cors = require('cors')
 const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const routes = require('./routes/index')
-const jwt = require('jsonwebtoken')
-
 require('dotenv').config()
 
 const port = process.env.PORT || 3000
@@ -23,12 +20,12 @@ connection.connect(err => {
   }
 })
 
+app.use(express.static('assets'))
 app.use(cors())
 app.use(morgan('tiny'))
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static('assets'))
 app.use('/person', routes.person)
 app.use('/city', routes.city)
 app.use('/description', routes.description)

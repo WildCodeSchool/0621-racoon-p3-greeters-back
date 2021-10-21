@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get('/', (req, res) => {
   //all description//
-  const sql = `SELECT * FROM description`
+  const sql = `SELECT * FROM description WHERE description.description_id=1`
   mysql.query(sql, (err, result) => {
     if (err) {
       res.status(500).send('Error from Database')

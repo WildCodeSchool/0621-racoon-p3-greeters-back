@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
   )
 })
 
-//Get for photo by id
+//Get for photo by city id
 router.get('/:id', (req, res) => {
   const photoId = req.params.id
   const sql = `SELECT * FROM photos JOIN city ON city.city_id=city_city_id WHERE city.city_id=?`
