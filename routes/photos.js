@@ -20,7 +20,7 @@ router.get('/', (req, res) => {
 //Get for photo by id
 router.get('/:id', (req, res) => {
   const photoId = req.params.id
-  const sql = `SELECT * FROM photos JOIN city ON city.city_id=city_city_id WHERE photos.photos_id=?`
+  const sql = `SELECT * FROM photos JOIN city ON city.city_id=city_city_id WHERE city.city_id=?`
   mysql.query(sql, [photoId], (err, result) => {
     if (err) {
       res.status(500).send(err)
