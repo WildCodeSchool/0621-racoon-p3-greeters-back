@@ -30,7 +30,7 @@ router.get('/filter', (req, res) => {
 router.get('/', (req, res) => {
   let sql = `SELECT * FROM person as p JOIN city ON city.city_id=person_city_id`
   if (req.query.limit) {
-    sql += ` LIMIT 4`
+    sql += ` LIMIT 6`
   }
   mysql.query(sql, (err, result) => {
     if (err) {
