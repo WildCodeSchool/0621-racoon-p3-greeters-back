@@ -60,7 +60,6 @@ router.put('/:id', (req, res) => {
     [cityId],
     (err, selectResult) => {
       if (err) {
-        console.log(err)
         res.status(500).send('Error updating a city')
       } else {
         const cityFromDb = selectResult[0]
@@ -71,7 +70,6 @@ router.put('/:id', (req, res) => {
             [cityToUpdate, cityId],
             err => {
               if (err) {
-                console.log(err)
                 res.status(500).send('Error updating a city')
               } else {
                 //const updated = { ...cityFromDb, ...cityToUpdate }
@@ -91,7 +89,6 @@ router.delete('/:id', (req, res) => {
   const cityId = req.params.id
   mysql.query('DELETE FROM city WHERE city.city_id=?', [cityId], err => {
     if (err) {
-      console.log(err)
       res.status(500).send('Error deleting a city')
     } else {
       res.status(200).send('City deleted!')

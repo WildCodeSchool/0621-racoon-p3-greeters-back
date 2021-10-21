@@ -156,61 +156,6 @@ router.post('/', (req, res) => {
   })
 })
 
-//Update a greeter by ID//
-// router.put('/:id', (req, res) => {
-//   const personId = req.params.id
-//   mysql.query(
-//     'SELECT * FROM person as p JOIN city ON city.city_id=person_city_id WHERE p.person_id=?',
-//     [personId],
-//     (err, result) => {
-//       if (err) {
-//         res.status(500).send(err + '1st Error updating')
-//       } else {
-//         mysql.query(
-//           //get thematic with greeter id
-//           'SELECT pht.person_person_id,t.* FROM person_has_thematic AS pht LEFT JOIN thematic AS t ON pht.thematic_thematic_id = t.thematic_id WHERE pht.person_person_id= ?',
-//           [personId],
-//           (err, result2) => {
-//             if (err) {
-//               res.status(500).send(err + '2nd error from database')
-//             } else {
-//               console.log(result2)
-//               mysql.query(
-//                 //get language with greeter id
-//                 'SELECT phl.person_person_id,l.* FROM person_has_language AS phl LEFT JOIN languages AS l ON phl.language_language_id = l.language_id WHERE phl.person_person_id= ?',
-//                 [personId],
-//                 (err, result3) => {
-//                   if (err) {
-//                     res.status(500).send(err + '3rd error from database')
-//                   } else {
-//                     const personFromDb = result[0]
-//                     if (personFromDb) {
-//                       const personPropsToUpdate = req.body
-//                       mysql.query(
-//                         'UPDATE person SET ? WHERE person.person_id = ?',
-//                         [personPropsToUpdate, personId],
-//                         err => {
-//                           if (err) {
-//                             res.status(500).send(err + '4th Error updating')
-//                           } else {
-//                             res.status(200).json(personPropsToUpdate)
-//                           }
-//                         }
-//                       )
-//                     } else {
-//                       res.status(404).send(`not found`)
-//                     }
-//                   }
-//                 }
-//               )
-//             }
-//           }
-//         )
-//       }
-//     }
-//   )
-// })
-
 router.put('/:id', (req, res) => {
   const personId = req.params.id
   const personPropsToUpdate = req.body
@@ -280,7 +225,6 @@ router.delete('/:id', (req, res) => {
           const sql3 = 'DELETE FROM person WHERE person.person_id=?'
           mysql.query(sql3, personId, (err, result3) => {
             if (err) {
-              console.log(err)
               res.status(500).send('Error deleting a greeter')
             } else {
               res.status(200).send('Greeter deleted!')

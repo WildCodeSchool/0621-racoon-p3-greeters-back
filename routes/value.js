@@ -22,7 +22,6 @@ router.put('/', (req, res) => {
     [valueToUpdate],
     err => {
       if (err) {
-        console.log(err)
         res.status(500).send('Error updating the value page')
       } else {
         res.status(200).json(valueToUpdate)

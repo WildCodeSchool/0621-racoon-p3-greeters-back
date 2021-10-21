@@ -74,7 +74,6 @@ router.post('/protected', (req, res) => {
       if (err) {
         return res.status(401).send('Error')
       }
-      console.log('decode', decoded)
       return res.status(200).send('Success')
     }
   )

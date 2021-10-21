@@ -21,7 +21,6 @@ router.put('/', (req, res) => {
     [conceptToUpdate],
     err => {
       if (err) {
-        console.log(err)
         res.status(500).send('Error updating the concept page')
       } else {
         res.status(200).json(conceptToUpdate)
