@@ -15,11 +15,13 @@ router.get('/', (req, res) => {
   })
 })
 
+//PUT for value
 router.put('/', (req, res) => {
   const valueToUpdate = req.body
+  const id = 1
   mysql.query(
-    'UPDATE value SET ? WHERE value.value_id=1',
-    [valueToUpdate],
+    'UPDATE value SET ? WHERE value.value_id=?',
+    [valueToUpdate, id],
     err => {
       if (err) {
         res.status(500).send('Error updating the value page')

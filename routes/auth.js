@@ -1,10 +1,8 @@
-const express = require('express')
-const connection = require('../db-config')
-const jwt = require('jsonwebtoken')
-const db = connection.promise()
 const argon2 = require('argon2')
-require('dotenv').config()
-const mysql = require('../db-config')
+const connection = require('../db-config')
+const db = connection.promise()
+const express = require('express')
+const jwt = require('jsonwebtoken')
 
 const router = express.Router()
 

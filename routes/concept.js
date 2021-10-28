@@ -3,6 +3,7 @@ const mysql = require('../db-config')
 
 const router = express.Router()
 
+//Get for all concept
 router.get('/', (req, res) => {
   const sql = `SELECT * FROM concept`
   mysql.query(sql, (err, result) => {
@@ -14,11 +15,13 @@ router.get('/', (req, res) => {
   })
 })
 
+//PUT for concept
 router.put('/', (req, res) => {
   const conceptToUpdate = req.body
+  const id = 1
   mysql.query(
-    'UPDATE concept SET ? WHERE concept.concept_id=1',
-    [conceptToUpdate],
+    'UPDATE concept SET ? WHERE concept.concept_id=?',
+    [conceptToUpdate, id],
     err => {
       if (err) {
         res.status(500).send('Error updating the concept page')

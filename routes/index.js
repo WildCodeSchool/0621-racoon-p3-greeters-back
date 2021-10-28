@@ -1,13 +1,13 @@
-const person = require('./person')
+const admin = require('./admin')
+const auth = require('./auth')
 const city = require('./city')
 const concept = require('./concept')
 const description = require('./description')
-const value = require('./value')
-const them = require('./thematic')
 const lang = require('./language')
+const person = require('./person')
 const photos = require('./photos')
-const admin = require('./admin')
-const auth = require('./auth')
+const them = require('./thematic')
+const value = require('./value')
 
 module.exports = {
   person,

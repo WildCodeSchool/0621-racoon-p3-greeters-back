@@ -3,6 +3,7 @@ const mysql = require('../db-config')
 
 const router = express.Router()
 
+//Get person, thematic and language in one result
 router.get('/filter', (req, res) => {
   const sql = `SELECT p.*, group_concat(distinct c.city_name) as person_city_name, group_concat(distinct l.language_name_fr) as person_language_fr, group_concat(distinct l.language_name_en) as person_language_en, group_concat(distinct t.thematic_name_fr) as person_thematic_fr, group_concat(distinct t.thematic_name_en) as person_thematic_en
   FROM person as p 
@@ -27,6 +28,7 @@ router.get('/filter', (req, res) => {
   })
 })
 
+//Get all person
 router.get('/', (req, res) => {
   let sql = `SELECT * FROM person as p JOIN city ON city.city_id=person_city_id`
   if (req.query.limit) {
@@ -41,14 +43,14 @@ router.get('/', (req, res) => {
         'SELECT pht.person_person_id,t.* FROM person_has_thematic AS pht LEFT JOIN thematic AS t ON pht.thematic_thematic_id = t.thematic_id',
         (err, result2) => {
           if (err) {
-            res.status(500).send('2nd error from database')
+            res.status(500).send('error from database')
           } else {
             mysql.query(
               //get language with greeter id
               'SELECT phl.person_person_id,l.* FROM person_has_language AS phl LEFT JOIN languages AS l ON phl.language_language_id = l.language_id',
               (err, result3) => {
                 if (err) {
-                  res.status(500).send('3rd error from database')
+                  res.status(500).send('error from database')
                 } else {
                   res.status(200).json({
                     result,
@@ -74,7 +76,7 @@ router.get('/:id', (req, res) => {
     [greeterId],
     (err, result) => {
       if (err) {
-        res.status(500).send(' 1st error from database')
+        res.status(500).send('error from database')
       } else {
         mysql.query(
           //get thematic with greeter id
@@ -82,7 +84,7 @@ router.get('/:id', (req, res) => {
           [greeterId],
           (err, result2) => {
             if (err) {
-              res.status(500).send('2nd error from database')
+              res.status(500).send('error from database')
             } else {
               mysql.query(
                 //get language with greeter id
@@ -90,7 +92,7 @@ router.get('/:id', (req, res) => {
                 [greeterId],
                 (err, result3) => {
                   if (err) {
-                    res.status(500).send('3rd error from database')
+                    res.status(500).send('error from database')
                   } else {
                     res.status(200).json({
                       result,
@@ -125,7 +127,7 @@ router.post('/', (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
   mysql.query(sql, bodyData, (err, result) => {
     if (err) {
-      res.status(500).send('1st error from database')
+      res.status(500).send('error from database')
     } else {
       //Post into person_has_thematic
       const sql2 = `INSERT INTO person_has_thematic
@@ -145,7 +147,7 @@ router.post('/', (req, res) => {
           const langData = [idperson, req.body.language_language_id]
           mysql.query(sql3, langData, (err, result3) => {
             if (err) {
-              res.status(500).send('3rd error from database')
+              res.status(500).send('error from database')
             } else {
               res.status(200).json({ result, result2, result3 })
             }
@@ -156,6 +158,7 @@ router.post('/', (req, res) => {
   })
 })
 
+//PUT for person by ID
 router.put('/:id', (req, res) => {
   const personId = req.params.id
   const personPropsToUpdate = req.body
@@ -172,6 +175,7 @@ router.put('/:id', (req, res) => {
   )
 })
 
+//PUT person/them by ID
 router.put('/them/:id', (req, res) => {
   const personId = req.params.id
   const personPropsToUpdate = req.body
@@ -180,7 +184,7 @@ router.put('/them/:id', (req, res) => {
     [personPropsToUpdate, personId],
     (err, result) => {
       if (err) {
-        res.status(500).send(err + '1st Error updating')
+        res.status(500).send(err + 'Error updating')
       } else {
         res.status(200).json(personPropsToUpdate)
       }
@@ -188,6 +192,7 @@ router.put('/them/:id', (req, res) => {
   )
 })
 
+////PUT person/lang by ID
 router.put('/lang/:id', (req, res) => {
   const personId = req.params.id
   const personPropsToUpdate = req.body
@@ -196,7 +201,7 @@ router.put('/lang/:id', (req, res) => {
     [personPropsToUpdate, personId],
     (err, result) => {
       if (err) {
-        res.status(500).send(err + '1st Error updating')
+        res.status(500).send(err + 'Error updating')
       } else {
         res.status(200).json(personPropsToUpdate)
       }
@@ -212,14 +217,14 @@ router.delete('/:id', (req, res) => {
         person_person_id=?`
   mysql.query(sql, personId, (err, result) => {
     if (err) {
-      res.status(500).send('1st error')
+      res.status(500).send('error')
     } else {
       //DELETE into person_has_language
       const sql2 = `DELETE FROM person_has_language WHERE
         person_person_id=?`
       mysql.query(sql2, personId, (err, result2) => {
         if (err) {
-          res.status(500).send('2st error')
+          res.status(500).send('error')
         } else {
           //DELETE into person
           const sql3 = 'DELETE FROM person WHERE person.person_id=?'

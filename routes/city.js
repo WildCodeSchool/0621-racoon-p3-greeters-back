@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
   //get for all cities//
   mysql.query('SELECT * FROM city', (err, result) => {
     if (err) {
-      res.status(500).send(' 1 Error from Database')
+      res.status(500).send('Error from Database')
     } else {
       res.status(200).json(result)
     }
@@ -72,7 +72,6 @@ router.put('/:id', (req, res) => {
               if (err) {
                 res.status(500).send('Error updating a city')
               } else {
-                //const updated = { ...cityFromDb, ...cityToUpdate }
                 res.status(200).json(cityToUpdate)
               }
             }
@@ -84,6 +83,7 @@ router.put('/:id', (req, res) => {
     }
   )
 })
+
 //DELETE for city/:id//
 router.delete('/:id', (req, res) => {
   const cityId = req.params.id
@@ -95,4 +95,5 @@ router.delete('/:id', (req, res) => {
     }
   })
 })
+
 module.exports = router

@@ -3,10 +3,11 @@ const mysql = require('../db-config')
 
 const router = express.Router()
 
+//all description//
 router.get('/', (req, res) => {
-  //all description//
-  const sql = `SELECT * FROM description WHERE description.description_id=1`
-  mysql.query(sql, (err, result) => {
+  const id = 1
+  const sql = `SELECT * FROM description WHERE description.description_id=?`
+  mysql.query(sql, id, (err, result) => {
     if (err) {
       res.status(500).send('Error from Database')
     } else {
@@ -15,11 +16,13 @@ router.get('/', (req, res) => {
   })
 })
 
+//PUT for description
 router.put('/', (req, res) => {
   const descriptionToUpdate = req.body
+  const id = 1
   mysql.query(
-    'UPDATE description SET ? WHERE description.description_id=1',
-    [descriptionToUpdate],
+    'UPDATE description SET ? WHERE description.description_id=?',
+    [descriptionToUpdate, id],
     err => {
       if (err) {
         res.status(500).send('Error updating the description page')
